@@ -1,0 +1,197 @@
+#!/usr/bin/env python
+
+"""
+Created on March 17, 2024
+
+@author: Talitha Forcier
+@contact: talitha.forcier@nyulangone.edu
+@author: Oliver Tam
+@contact oliver.tam@nyulangone.edu
+@status:
+@version: 0.1
+"""
+
+import sys
+import logging
+import operator
+import subprocess
+import argparse
+import os
+import time
+import pysam
+import scipy.sparse as sparse
+import scipy.io as sio
+import multiprocessing as mp
+import numpy as np
+import networkx as nx
+import re
+import gzip
+import collections
+import gc
+
+from TEtools.TEindex import *
+from TEtools.GeneIndex import *
+from TEtools.AlignmentIO import *
+from TEtools.Counters import *
+
+TEindex_BINSIZE = 500
+sys.setrecursionlimit(10000)
+
+
+def read_options(parser):
+    args = parser.parse_args()
+
+    if not os.path.isfile(args.tefile):
+        logging.error("No such file: %s !\n" % args.tefile)
+        sys.exit(1)
+
+    if not os.path.isfile(args.gtffile):
+        logging.error("No such file: %s !\n" % args.gtffile)
+        sys.exit(1)
+
+    if not os.path.isfile(args.bam):
+        logging.error("No such file: %s !\n" % args.bam)
+        sys.exit(1)
+
+    if args.stranded not in ['forward', 'no', 'reverse']:
+        logging.error("Does not support such stranded value: %s !\n" % args.stranded)
+        sys.exit(1)
+
+    logging.basicConfig(level=2 * 10,
+                        format='%(levelname)-5s @ %(asctime)s: %(message)s ',
+                        datefmt='%a, %d %b %Y %H:%M:%S',
+                        stream=sys.stderr, filemode="w")
+
+    args.error = logging.critical
+    args.warn = logging.warning
+    args.debug = logging.debug
+    args.info = logging.info
+
+    args.argtxt = "\n".join(("# ARGUMENTS LIST:",
+                             "# name = %s" % args.prefix,
+                             "# BAM file = %s" % args.bam,
+                             "# GTF file = %s " % args.gtffile,
+                             "# TE file = %s " % args.tefile,
+                             "# stranded = %s " % args.stranded
+                             ))
+    return args
+
+
+def prepare_parser():
+    desc = "Measuring TE expression per-sample."
+
+    exmp = "Example: TEsolo -b RNAseq.bam --GTF gene_annotation.gtf --TE TE_annotation.gtf "
+
+    parser = argparse.ArgumentParser(prog='TEsolo', description=desc, epilog=exmp)
+
+    parser.add_argument('-b', '--BAM', metavar='RNAseq.bam', dest='bam', required=True,
+                        help='STARsolo output RNAseq BAM file.')
+    parser.add_argument('--GTF', metavar='genic-GTF-file', dest='gtffile', type=str, required=True,
+                        help='GTF file for gene annotations')
+    parser.add_argument('--TE', metavar='TE-GTF-file', dest='tefile', type=str, required=True,
+                        help='GTF file for transposable element annotations')
+    parser.add_argument('--stranded', metavar='option', dest='stranded', type=str, default="forward", choices=['no', 'forward', 'reverse'],
+                        help='Is this a stranded library? (no, forward, or reverse). For "first-strand" cDNA libraries '
+                             '(e.g. TruSeq stranded), choose reverse. For "second-strand" cDNA libraries (e.g. 10x '
+                             'Genomics), choose forward. DEFAULT: forward.')
+    parser.add_argument('--project', metavar='name', dest='prefix', default='TEsolo_out',
+                        help='Name of this project. DEFAULT: TEsolo_out')
+    parser.add_argument('--threads', metavar='number_processors', dest='numproc', type=int, default=10,
+                        help='Number of processors/threads allocated. DEFAULT:10')
+    parser.add_argument('--cutoff', metavar='minimum_UMI', dest='cutoff', type=int, default=1000,
+                        help='Minimum number of uncorrected UMIs required to process a barcode. DEFAULT:1000')
+    parser.add_argument('--nuc_seq', metavar='True-or-False-nuc-seq', dest='yes_ns', type=bool, default=False,
+                        help='True or False on whether this is a nuc-seq run. DEFAULT: False')
+    parser.add_argument('--version', action='version', version='%(prog)s 0.1')
+
+    return parser
+
+
+def main():
+    """Start TEsolo......parse options......"""
+
+    args = read_options(prepare_parser())
+
+    info = args.info
+
+    info("\n" + args.argtxt + "\n")
+
+    info("Processing GTF files ... \n")
+    info("processing genes as full-length transcripts: "+str(args.yes_ns)+"\n")
+
+    if not args.yes_ns:
+        try:
+            info("Building gene index ....... \n")
+            geneIdx = GeneFeatures(args.gtffile, args.stranded, "exon", "gene_id")
+            info("Done building gene index ...... \n")
+        except:
+            sys.stderr.write("Error in building gene index \n")
+            sys.exit(1)
+    else:
+        try:
+            info("Building gene index ....... \n")
+            geneIdx = GeneFeatures(args.gtffile, args.stranded, "transcript", "gene_id")
+            info("Done building gene index ...... \n")
+        except:
+            sys.stderr.write("Error in building gene index \n")
+            sys.exit(1)
+
+    if args.tefile[-4:] == '.gtf':
+        try:
+            teIdx = TEfeatures()
+            cur_time = time.time()
+            te_tmpfile = '.' + str(cur_time) + '.te.gtf'
+            subprocess.call(['sort -k 1,1 -k 4,4g ' + args.tefile + ' >' + te_tmpfile], shell=True)
+            info("Building TE index ....... \n")
+            teIdx.build(te_tmpfile)
+            subprocess.call(['rm -f ' + te_tmpfile], shell=True)
+            info("Done building TE index ...... \n")
+
+        except:
+            sys.stderr.write("Error in building TE index \n")
+            sys.exit(1)
+
+    else:
+        sys.stderr.write("TE annotation file extension not recognized, it needs to be .gtf")
+        sys.exit(1)
+
+    print('read_in_alignment starting at:  ', time.ctime())
+    full_dict = read_in_alignment(args.bam, geneIdx, teIdx, args.stranded)
+    print('read_in_alignment finishing at:  ', time.ctime())
+    full_dict, init_cbc, post_cbc = basic_filtering(full_dict, args.cutoff)
+    print('initially {} cell barcodes detected, with {} passing the minimum threshold'.format(init_cbc, post_cbc))
+
+    annots = geneIdx.getFeatures() + teIdx.getElements()
+    gencnt = len(geneIdx.getFeatures())
+    gene_blank = sparse.lil_matrix(np.zeros(gencnt))
+    te_blank = sparse.lil_matrix(np.zeros(len(teIdx.getElements())))
+    effective_lengths = np.subtract(np.hstack((geneIdx.lengths, teIdx.getLengths())), 74)
+
+    del geneIdx
+    del teIdx
+    gc.collect()
+    print('indexes deleted:  ', time.ctime())
+    effective_lengths = np.divide(1, effective_lengths, out=np.zeros(len(effective_lengths)), where=effective_lengths > 0)
+
+    print('count_cells starting at:  ', time.ctime())
+    sparse_tbl, cbcs, collapsed_summary = count_cells(full_dict, gene_blank, te_blank, effective_lengths, args.numproc)
+    sparse_tbl.data = np.rint(sparse_tbl.data)
+    sparse_tbl = sparse_tbl.astype(int)
+    sparse_tbl.eliminate_zeros()
+
+    with open("{}.annots".format(args.prefix), 'w') as fil_annot:
+        fil_annot.write('\n'.join(annots))
+
+    with open("{}.cbcs".format(args.prefix), 'w') as fil_cbcs:
+        fil_cbcs.write('\n'.join(cbcs))
+
+    sio.mmwrite("{}.mtx".format(args.prefix), sparse_tbl)
+
+
+
+if __name__ == '__main__':
+    try:
+        main()
+    except KeyboardInterrupt:
+        sys.stderr.write("User interrupt! \n")
+        sys.exit(0)
