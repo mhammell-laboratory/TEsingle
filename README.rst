@@ -46,16 +46,18 @@ run this command instead::
     $ python setup.py install --prefix /local/home/usr
 
 *NOTE* In the above example, you must add
+::
 
     /local/home/usr/bin
 
-to the PATH variable, and
+to the ``PATH`` variable, and
+::
 
      /local/home/usr/lib/pythonX.Y/site-packages
 
-to the PYTHONPATH variable, where X refers to the major python version,
-and Y refers to the minor python version. (e.g. python2.7 if using python version 2.7.x,
-and python3.6 if using python version 3.6.x)
+to the ``PYTHONPATH`` variable, where ``X`` refers to the major python version,
+and ``Y`` refers to the minor python version. (e.g. ``python2.7`` if using python version 2.7.x,
+and ``python3.6`` if using python version 3.6.x)
 
 
 TEsingle
@@ -107,6 +109,8 @@ Usage
 Example Command Lines
 ---------------------
 
+::
+
     TEsingle  --threads 10 --stranded forward -b RNAseq.bam --nuc_seq False --GTF refseq_genes.gtf --TE rmsk_TE.gtf --project sample_test
 
 Cluster Usage Recommendations
@@ -138,12 +142,13 @@ as this could significantly improve the quality of transposable element quantifi
 *Specific recommendations when using STAR*
 
 `STAR <https://github.com/alexdobin/STAR>`_ utilizes two parameters for optimal identification of multi-mappers
-`--outFilterMultimapNmax` and `--winAnchorMultimapNmax`. The author of STAR recommends that `--winAnchorMultimapNmax`
-should be set at twice the value used in `--outFilterMultimapNmax`, but no less than 50. In our study, we used
-100 for `--outFilterMultimapNmax` and 200 for `--winAnchorMultimapNmax`, though we highly suggest users test
+``--outFilterMultimapNmax`` and ``--winAnchorMultimapNmax``. The author of STAR recommends that ``--winAnchorMultimapNmax``
+should be set at twice the value used in ``--outFilterMultimapNmax``, but no less than 50. In our study, we used
+100 for ``--outFilterMultimapNmax`` and 200 for ``--winAnchorMultimapNmax``, though we highly suggest users test
 multiple values to identify the optimal value for their experiment.
 
-STAR  settings used:
+STAR  settings used::
+
 --alignIntronMax 1000000
 --alignIntronMin 20
 --alignMatesGapMax 1000000
