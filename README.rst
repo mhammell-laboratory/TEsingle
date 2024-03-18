@@ -20,7 +20,7 @@ Created by Talitha Forcier, Cole Wunderlich, Oliver Tam & Molly Gale Hammell, Ma
 
 Copyright (C) 2024 Talitha Forcier, Cole Wunderlich, Oliver Tam & Molly Gale Hammell
 
-Contact: Talitha Forcier (talitha.forcier@nyulangone.edu)
+Contact: mghcompbio@gmail.com
 
 Requirements
 ------------
