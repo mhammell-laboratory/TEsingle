@@ -91,7 +91,7 @@ Description: TEsingle
                      reverse -  "First-strand" cDNA library (e.g. Illumina TruSeq stranded)
                                 DEFAULT: forward.
           --project [name]      Prefix used for output files (e.g. project name)
-                                DEFAULT: TElocal_out
+                                DEFAULT: TEsingle_out
 
           *Analysis options*
           --cutoff [value]  Minimum number of UMI required to process a cell barcode

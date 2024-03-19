@@ -80,9 +80,9 @@ def read_options(parser):
 def prepare_parser():
     desc = "Measuring TE expression per-sample."
 
-    exmp = "Example: TEsolo -b RNAseq.bam --GTF gene_annotation.gtf --TE TE_annotation.gtf "
+    exmp = "Example: TEsingle -b RNAseq.bam --GTF gene_annotation.gtf --TE TE_annotation.gtf "
 
-    parser = argparse.ArgumentParser(prog='TEsolo', description=desc, epilog=exmp)
+    parser = argparse.ArgumentParser(prog='TEsingle', description=desc, epilog=exmp)
 
     parser.add_argument('-b', '--BAM', metavar='RNAseq.bam', dest='bam', required=True,
                         help='STARsolo output RNAseq BAM file.')
@@ -94,8 +94,8 @@ def prepare_parser():
                         help='Is this a stranded library? (no, forward, or reverse). For "first-strand" cDNA libraries '
                              '(e.g. TruSeq stranded), choose reverse. For "second-strand" cDNA libraries (e.g. 10x '
                              'Genomics), choose forward. DEFAULT: forward.')
-    parser.add_argument('--project', metavar='name', dest='prefix', default='TEsolo_out',
-                        help='Name of this project. DEFAULT: TEsolo_out')
+    parser.add_argument('--project', metavar='name', dest='prefix', default='TEsingle_out',
+                        help='Name of this project. DEFAULT: TEsingle_out')
     parser.add_argument('--threads', metavar='number_processors', dest='numproc', type=int, default=10,
                         help='Number of processors/threads allocated. DEFAULT:10')
     parser.add_argument('--cutoff', metavar='minimum_UMI', dest='cutoff', type=int, default=1000,
@@ -108,7 +108,7 @@ def prepare_parser():
 
 
 def main():
-    """Start TEsolo......parse options......"""
+    """Start TEsingle......parse options......"""
 
     args = read_options(prepare_parser())
 

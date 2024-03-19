@@ -30,7 +30,7 @@ setup(name='TEsingle',
           'Linux'
       ],
       install_requires=[
-          'argparse',
+          'networkx',
           'pysam>=0.9'
       ],
       include_package_data=True,
