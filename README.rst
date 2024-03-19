@@ -25,9 +25,11 @@ Contact: mghcompbio@gmail.com
 Requirements
 ------------
 
-Python:     3.x
+Python:     3.2.x or greater
 
 pysam:      0.9.x or greater
+
+networkx
 
 
 Installation
