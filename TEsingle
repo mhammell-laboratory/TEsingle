@@ -12,7 +12,6 @@ Created on March 17, 2024
 """
 
 import sys
-import logging
 import operator
 import subprocess
 import argparse
@@ -42,30 +41,20 @@ def read_options(parser):
     args = parser.parse_args()
 
     if not os.path.isfile(args.tefile):
-        logging.error("No such file: %s !\n" % args.tefile)
+        sys.stderr.write("No such file: %s !\n" % args.tefile)
         sys.exit(1)
 
     if not os.path.isfile(args.gtffile):
-        logging.error("No such file: %s !\n" % args.gtffile)
+        sys.stderr.write("No such file: %s !\n" % args.gtffile)
         sys.exit(1)
 
     if not os.path.isfile(args.bam):
-        logging.error("No such file: %s !\n" % args.bam)
+        sys.stderr.write("No such file: %s !\n" % args.bam)
         sys.exit(1)
 
     if args.stranded not in ['forward', 'no', 'reverse']:
-        logging.error("Does not support such stranded value: %s !\n" % args.stranded)
+        sys.stderr.write("Does not support such stranded value: %s !\n" % args.stranded)
         sys.exit(1)
-
-    logging.basicConfig(level=2 * 10,
-                        format='%(levelname)-5s @ %(asctime)s: %(message)s ',
-                        datefmt='%a, %d %b %Y %H:%M:%S',
-                        stream=sys.stderr, filemode="w")
-
-    args.error = logging.critical
-    args.warn = logging.warning
-    args.debug = logging.debug
-    args.info = logging.info
 
     args.argtxt = "\n".join(("# ARGUMENTS LIST:",
                              "# name = %s" % args.prefix,
@@ -113,26 +102,24 @@ def main():
 
     args = read_options(prepare_parser())
 
-    info = args.info
+    print("\n" + args.argtxt + "\n", flush=True)
 
-    info("\n" + args.argtxt + "\n")
-
-    info("Processing GTF files ... \n")
-    info("processing genes as full-length transcripts: "+str(args.yes_ns)+"\n")
+    print("Processing GTF files ... \n", flush=True)
+    print("processing genes as full-length transcripts: "+str(args.yes_ns)+"\n", flush=True)
 
     if not args.yes_ns:
         try:
-            info("Building gene index ....... \n")
+            print("Building gene index ....... \n", flush=True)
             geneIdx = GeneFeatures(args.gtffile, args.stranded, "exon", "gene_id")
-            info("Done building gene index ...... \n")
+            print("Done building gene index ...... \n", flush=True)
         except:
             sys.stderr.write("Error in building gene index \n")
             sys.exit(1)
     else:
         try:
-            info("Building gene index ....... \n")
+            print("Building gene index ....... \n", flush=True)
             geneIdx = GeneFeatures(args.gtffile, args.stranded, "transcript", "gene_id")
-            info("Done building gene index ...... \n")
+            print("Done building gene index ...... \n", flush=True)
         except:
             sys.stderr.write("Error in building gene index \n")
             sys.exit(1)
@@ -143,10 +130,10 @@ def main():
             cur_time = time.time()
             te_tmpfile = '.' + str(cur_time) + '.te.gtf'
             subprocess.call(['sort -k 1,1 -k 4,4g ' + args.tefile + ' >' + te_tmpfile], shell=True)
-            info("Building TE index ....... \n")
+            print("Building TE index ....... \n", flush=True)
             teIdx.build(te_tmpfile)
             subprocess.call(['rm -f ' + te_tmpfile], shell=True)
-            info("Done building TE index ...... \n")
+            print("Done building TE index ...... \n", flush=True)
 
         except:
             sys.stderr.write("Error in building TE index \n")
@@ -156,11 +143,11 @@ def main():
         sys.stderr.write("TE annotation file extension not recognized, it needs to be .gtf")
         sys.exit(1)
 
-    print('read_in_alignment starting at:  ', time.ctime())
+    print('read_in_alignment starting at:  ', time.ctime(), flush=True)
     full_dict = read_in_alignment(args.bam, geneIdx, teIdx, args.stranded)
-    print('read_in_alignment finishing at:  ', time.ctime())
+    print('read_in_alignment finishing at:  ', time.ctime(), flush=True)
     full_dict, init_cbc, post_cbc = basic_filtering(full_dict, args.cutoff)
-    print('initially {} cell barcodes detected, with {} passing the minimum threshold'.format(init_cbc, post_cbc))
+    print('initially {} cell barcodes detected, with {} passing the minimum threshold'.format(init_cbc, post_cbc), flush=True)
 
     annots = geneIdx.getFeatures() + teIdx.getElements()
     gencnt = len(geneIdx.getFeatures())
@@ -171,10 +158,10 @@ def main():
     del geneIdx
     del teIdx
     gc.collect()
-    print('indexes deleted:  ', time.ctime())
+    print('indexes deleted:  ', time.ctime(), flush=True)
     effective_lengths = np.divide(1, effective_lengths, out=np.zeros(len(effective_lengths)), where=effective_lengths > 0)
 
-    print('count_cells starting at:  ', time.ctime())
+    print('count_cells starting at:  ', time.ctime(), flush=True)
     sparse_tbl, cbcs, collapsed_summary = count_cells(full_dict, gene_blank, te_blank, effective_lengths, args.numproc)
     sparse_tbl.data = np.rint(sparse_tbl.data)
     sparse_tbl = sparse_tbl.astype(int)
@@ -188,7 +175,7 @@ def main():
 
     sio.mmwrite("{}.mtx".format(args.prefix), sparse_tbl)
 
-    print('run complete\n')
+    print('run complete\n', flush=True)
 
 
 if __name__ == '__main__':

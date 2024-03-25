@@ -214,7 +214,7 @@ def count_cells(full_dict, gene_blank, te_blank, effective_lengths, num_processe
     pool.close()
     pool.join()
 
-    print('count_umis finishing at:  ', time.ctime())
+    print('count_umis finishing at:  ', time.ctime(), flush=True)
     checker = False
 
     new_cbclist = []
@@ -233,7 +233,7 @@ def count_cells(full_dict, gene_blank, te_blank, effective_lengths, num_processe
         else:
             tblstack = sparse.vstack([tblstack, cell_cnt])
 
-    print('count_cells finishing at:  ', time.ctime())
+    print('count_cells finishing at:  ', time.ctime(), flush=True)
     return tblstack, new_cbclist, full_sum
 
 
