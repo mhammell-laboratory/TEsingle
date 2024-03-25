@@ -35,7 +35,7 @@ def rearranger(subg_list):
 
 def resolver(categories, both_list):
     denom = categories[3]+categories[4]+categories[5]
-    if denom == 0:  # when would we be running this code and also having nothing in cat3? How was this error thrown?
+    if denom == 0:
         te_frac = 0
     else:
         te_frac = categories[3]/denom
@@ -205,7 +205,6 @@ def count_umis(cell_dict, gene_blank, te_blank, effective_lengths):
 def count_cells(full_dict, gene_blank, te_blank, effective_lengths, num_processes):
     cbclist = list(full_dict.keys())
 
-    mp.set_start_method('forkserver')
     pool = mp.Pool(num_processes)
 
     tbl_list = [(cbc, pool.apply_async(count_umis, args=(full_dict[cbc], gene_blank, te_blank, effective_lengths))) for cbc in cbclist]
