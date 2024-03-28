@@ -12,7 +12,7 @@ TEsingle takes single-cell RNA-seq data and annotates transcripts to both
 genes & transposable elements, producing a count table of all UMI counts for all cell barcodes.
 
 
-`Github Page <https://github.com/mhammell-laboratory/PLACEHOLDER>`_
+`Github Page <https://github.com/mhammell-laboratory/TEsingle>`_
 
 `MHammell Lab <http://hammelllab.labsites.cshl.edu/software>`_
 
@@ -30,6 +30,10 @@ Python:     3.2.x or greater
 pysam:      0.9.x or greater
 
 networkx
+
+scipy
+
+numpy
 
 
 Installation
