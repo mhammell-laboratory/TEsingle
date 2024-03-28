@@ -194,7 +194,7 @@ class GeneFeatures:
 
                     i += 1
                     if i % 100000 == 0:
-                        sys.stderr.write("%d GTF lines processed.\n" % i)
+                        print("%d GTF lines processed.\n" % i, flush=True)
         except:
             sys.stderr.write("Error occured in %s.\n" % gff.get_line_number_string())
             raise

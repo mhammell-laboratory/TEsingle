@@ -31,6 +31,8 @@ setup(name='TEsingle',
       ],
       install_requires=[
           'networkx',
+          'scipy',
+          'numpy',
           'pysam>=0.9'
       ],
       include_package_data=True,
