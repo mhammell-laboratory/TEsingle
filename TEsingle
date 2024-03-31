@@ -57,12 +57,12 @@ def read_options(parser):
         sys.exit(1)
 
     args.argtxt = "\n".join(("# ARGUMENTS LIST:",
-                             "# name = %s" % args.prefix,
-                             "# BAM file = %s" % args.bam,
+                             "# name = %s " % args.prefix,
+                             "# BAM file = %s " % args.bam,
                              "# GTF file = %s " % args.gtffile,
                              "# TE file = %s " % args.tefile,
                              "# stranded = %s " % args.stranded,
-                             "# UMI minimum = " % str(args.cutoff)
+                             "# UMI minimum = %s " % str(args.cutoff)
                              ))
     return args
 
