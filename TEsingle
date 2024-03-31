@@ -62,7 +62,7 @@ def read_options(parser):
                              "# GTF file = %s " % args.gtffile,
                              "# TE file = %s " % args.tefile,
                              "# stranded = %s " % args.stranded,
-                             "# UMI minimum = " % args.cutoff
+                             "# UMI minimum = " % str(args.cutoff)
                              ))
     return args
 
