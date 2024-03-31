@@ -96,10 +96,8 @@ Description: TEsingle
           *Analysis options*
           --cutoff [value]  Minimum number of UMI required to process a cell barcode
                             DEFAULT: 1000
-          --nuc_seq [option]    Is this a nuc-seq library? (True or False)
-                    True    -   transcript model of gene annotations used
-                    False   -   exon-only model of gene annotations used
-                                DEFAULT: False
+          --nuc_seq         Run this as a nuc-seq library, using the full-length transcript model of gene annotations.
+
 
           *Other options*
           --threads [value] Number of processors allocated
