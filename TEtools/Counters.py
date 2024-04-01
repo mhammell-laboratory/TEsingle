@@ -205,6 +205,8 @@ def count_umis(cell_dict, gene_blank, te_blank, effective_lengths):
 def count_cells(full_dict, gene_blank, te_blank, effective_lengths, num_processes):
     cbclist = list(full_dict.keys())
 
+    mp.set_start_method('forkserver')
+
     pool = mp.Pool(num_processes)
 
     tbl_list = [(cbc, pool.apply_async(count_umis, args=(full_dict[cbc], gene_blank, te_blank, effective_lengths))) for cbc in cbclist]
