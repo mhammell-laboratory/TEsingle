@@ -275,7 +275,7 @@ class TEfeatures(object):
 
         return list(TEs_translated)
 
-    def build(self, filename):
+    def build(self, filename, locus):
         self.__srcfile = filename
         try:
             f = open(self.__srcfile, 'r')
@@ -328,7 +328,10 @@ class TEfeatures(object):
                 raise
 
             full_name = transc_id + ':' + ele_id + ':' + family_id + ':' + class_id + ':' + strand
-            subf_name = ele_id + ':' + family_id + ':' + class_id
+            if not locus:
+                subf_name = ele_id + ':' + family_id + ':' + class_id
+            else:
+                subf_name = transc_id + ':' + ele_id + ':' + family_id + ':' + class_id
             self.fullShortDict[full_name] = subf_name
 
             if subf_name not in self.subfLengthDict:

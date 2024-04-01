@@ -92,6 +92,8 @@ def prepare_parser():
                         help='Minimum number of uncorrected UMIs required to process a barcode. DEFAULT:1000')
     parser.add_argument('--nuc_seq', dest='yes_ns', action="store_true", default=False,
                         help='Flag to set if this is a nuc-seq experiment.')
+    parser.add_argument('--locus', dest='yes_locus', action="store_true", default=False,
+                        help='Flag for locus-specific run.')
     parser.add_argument('--version', action='version', version='%(prog)s 0.1')
 
     return parser
@@ -131,7 +133,7 @@ def main():
             te_tmpfile = '.' + str(cur_time) + '.te.gtf'
             subprocess.call(['sort -k 1,1 -k 4,4g ' + args.tefile + ' >' + te_tmpfile], shell=True)
             print("Building TE index ....... \n", flush=True)
-            teIdx.build(te_tmpfile)
+            teIdx.build(te_tmpfile, args.yes_locus)
             subprocess.call(['rm -f ' + te_tmpfile], shell=True)
             print("Done building TE index ...... \n", flush=True)
 
