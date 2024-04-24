@@ -80,7 +80,8 @@ def prepare_parser():
                         help='GTF file for gene annotations')
     parser.add_argument('--TE', metavar='TE-GTF-file', dest='tefile', type=str, required=True,
                         help='GTF file for transposable element annotations')
-    parser.add_argument('--stranded', metavar='option', dest='stranded', type=str, default="forward", choices=['no', 'forward', 'reverse'],
+    parser.add_argument('--stranded', metavar='option', dest='stranded', type=str, default="forward",
+                        choices=['no', 'forward', 'reverse'],
                         help='Is this a stranded library? (no, forward, or reverse). For "first-strand" cDNA libraries '
                              '(e.g. TruSeq stranded), choose reverse. For "second-strand" cDNA libraries (e.g. 10x '
                              'Genomics), choose forward. DEFAULT: forward.')
@@ -108,6 +109,8 @@ def main():
 
     print("Processing GTF files ... \n", flush=True)
     print("processing genes as full-length transcripts: "+str(args.yes_ns)+"\n", flush=True)
+    if args.yes_locus:
+        print("Running in locus-specific mode. Length normalization turned off. \n", flush=True)
 
     if not args.yes_ns:
         try:
@@ -155,7 +158,10 @@ def main():
     gencnt = len(geneIdx.getFeatures())
     gene_blank = sparse.lil_matrix(np.zeros(gencnt))
     te_blank = sparse.lil_matrix(np.zeros(len(teIdx.getElements())))
-    effective_lengths = np.subtract(np.hstack((geneIdx.lengths, teIdx.getLengths())), 74)
+    if args.yes_locus:
+        effective_lengths = np.ones(len(geneIdx.lengths)+len(teIdx.getLengths()))
+    else:
+        effective_lengths = np.subtract(np.hstack((geneIdx.lengths, teIdx.getLengths())), 74)
 
     del geneIdx
     del teIdx
