@@ -96,13 +96,13 @@ Usage
                             DEFAULT: TEsingle_out
 
       *Analysis options*
-      --cutoff [value]  Minimum number of UMI required to process a cell barcode
-                        DEFAULT: 1000
-      --nuc_seq         Run this as a nuc-seq library, using the full-length transcript model of gene annotations.
+      --cutoff [number]     Minimum number of uncorrected UMIs required to process a barcode
+                            DEFAULT: 1000
+      --nuc_seq             Flag to set if this is a nuc-seq experiment.
+      --locus               Flag for locus-specific run.
 
       *Other options*
-      --threads [value] Number of processors allocated
-                        DEFAULT: 10
+       --threads [number] Number of processors/threads allocated. DEFAULT:10
       -h | --help
          Show help message
       --version
@@ -114,7 +114,7 @@ Example Command Lines
 
 ::
 
-    TEsingle  --threads 10 --stranded forward -b RNAseq.bam --nuc_seq False --GTF refseq_genes.gtf --TE rmsk_TE.gtf --project sample_test
+    TEsingle  --threads 10 --stranded forward -b RNAseq.bam --nuc_seq --GTF refseq_genes.gtf --TE rmsk_TE.gtf --project sample_test
 
 Cluster Usage Recommendations
 -----------------------------
