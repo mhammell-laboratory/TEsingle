@@ -5,7 +5,7 @@ Version: 0.1
 
 *NOTE* TEsingle relies on specially curated and indexed GTF files, which are not
 packaged with this software due to their size. Please go to
-`our website <http://hammelllab.labsites.cshl.edu/software#TElocal>`_
+`our website <http://hammelllab.labsites.cshl.edu/software/tesingle>`_
 for instructions to download the prebuilt curated indices.
 
 TEsingle takes single-cell RNA-seq data and annotates transcripts to both
@@ -14,7 +14,7 @@ genes & transposable elements, producing a count table of all UMI counts for all
 
 `Github Page <https://github.com/mhammell-laboratory/TEsingle>`_
 
-`MHammell Lab <http://hammelllab.labsites.cshl.edu/software>`_
+`MHammell Lab <https://www.mghlab.org/software>`_
 
 Created by Talitha Forcier, Cole Wunderlich, Oliver Tam & Molly Gale Hammell, March 2024
 
@@ -179,7 +179,7 @@ STAR  settings used::
 Copying & distribution
 ======================
 
-TEsingle is part of `TEToolkit suite <http://hammelllab.labsites.cshl.edu/software/>`_.
+TEsingle is part of `TEToolkit suite <https://www.mghlab.org/software>`_.
 
 TEsingle is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
