@@ -163,16 +163,14 @@ STAR  settings used::
 --winAnchorMultimapNmax 200
 --outFilterType BySJout
 --outSAMattributes NH HI AS nM CR CY UR UY CB GX GN sS sQ sM
---outSAMheaderHD @HD VN:1.4 SO:unsorted
+--outSAMheaderHD @HD VN:1.4
 --outSAMstrandField intronMotif
 --outSAMtype BAM SortedByCoordinate
 --sjdbScore 1
---soloType CB_UMI_Simple
---soloCellFilter EmptyDrops_CR 5000 0.99 10 45000 90000 500 0.01 20000 0.01 10000
+--soloType CB_samTagOut
 --soloCBmatchWLtype 1MM
---soloUMIdedup 1MM_All
---soloUMIfiltering -
---soloMultiMappers Unique
+--soloCBwhitelist (10x whitelist)
+--soloCellFilter Empty_Drops_CR 6000 0.99 10 45000 90000 500 0.01 20000 0.01 10000
 --soloFeatures GeneFull
 
 
@@ -193,5 +191,4 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with TEsingle.  If not, see `this website <http://www.gnu.org/licenses/>`_.
-
 
