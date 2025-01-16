@@ -93,8 +93,6 @@ def prepare_parser():
                         help='Minimum number of uncorrected UMIs required to process a barcode. DEFAULT:1000')
     parser.add_argument('--nuc_seq', dest='yes_ns', action="store_true", default=False,
                         help='Flag to set if this is a nuc-seq experiment.')
-    parser.add_argument('--locus', dest='yes_locus', action="store_true", default=False,
-                        help='Flag for locus-specific run.')
     parser.add_argument('--version', action='version', version='%(prog)s 0.1')
 
     return parser
@@ -109,8 +107,7 @@ def main():
 
     print("Processing GTF files ... \n", flush=True)
     print("processing genes as full-length transcripts: "+str(args.yes_ns)+"\n", flush=True)
-    if args.yes_locus:
-        print("Running in locus-specific mode. Length normalization turned off. \n", flush=True)
+    print("Running in locus-specific mode. \n", flush=True)
 
     if not args.yes_ns:
         try:
@@ -136,7 +133,7 @@ def main():
             te_tmpfile = '.' + str(cur_time) + '.te.gtf'
             subprocess.call(['sort -k 1,1 -k 4,4g ' + args.tefile + ' >' + te_tmpfile], shell=True)
             print("Building TE index ....... \n", flush=True)
-            teIdx.build(te_tmpfile, args.yes_locus)
+            teIdx.build(te_tmpfile)
             subprocess.call(['rm -f ' + te_tmpfile], shell=True)
             print("Done building TE index ...... \n", flush=True)
 
@@ -158,19 +155,14 @@ def main():
     gencnt = len(geneIdx.getFeatures())
     gene_blank = sparse.lil_matrix(np.zeros(gencnt))
     te_blank = sparse.lil_matrix(np.zeros(len(teIdx.getElements())))
-    if args.yes_locus:
-        effective_lengths = np.ones(len(geneIdx.lengths)+len(teIdx.getLengths()))
-    else:
-        effective_lengths = np.subtract(np.hstack((geneIdx.lengths, teIdx.getLengths())), 74)
 
     del geneIdx
     del teIdx
     gc.collect()
     print('indexes deleted:  ', time.ctime(), flush=True)
-    effective_lengths = np.divide(1, effective_lengths, out=np.zeros(len(effective_lengths)), where=effective_lengths > 0)
 
     print('count_cells starting at:  ', time.ctime(), flush=True)
-    sparse_tbl, cbcs, collapsed_summary = count_cells(full_dict, gene_blank, te_blank, effective_lengths, args.numproc)
+    sparse_tbl, cbcs, collapsed_summary = count_cells(full_dict, gene_blank, te_blank, args.numproc)
     sparse_tbl.data = np.rint(sparse_tbl.data)
     sparse_tbl = sparse_tbl.astype(int)
     sparse_tbl.eliminate_zeros()

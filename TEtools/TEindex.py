@@ -1,4 +1,3 @@
-import logging
 import sys
 
 
@@ -275,12 +274,12 @@ class TEfeatures(object):
 
         return list(TEs_translated)
 
-    def build(self, filename, locus):
+    def build(self, filename):
         self.__srcfile = filename
         try:
             f = open(self.__srcfile, 'r')
         except:
-            logging.error("cannot open such file %s !\n" % self.__srcfile)
+            sys.stderr.write("cannot open such file %s !\n" % self.__srcfile)
             sys.exit(1)
 
         name_idx = 0
@@ -328,10 +327,7 @@ class TEfeatures(object):
                 raise
 
             full_name = transc_id + ':' + ele_id + ':' + family_id + ':' + class_id + ':' + strand
-            if not locus:
-                subf_name = ele_id + ':' + family_id + ':' + class_id
-            else:
-                subf_name = transc_id + ':' + ele_id + ':' + family_id + ':' + class_id
+            subf_name = transc_id + ':' + ele_id + ':' + family_id + ':' + class_id
             self.fullShortDict[full_name] = subf_name
 
             if subf_name not in self.subfLengthDict:

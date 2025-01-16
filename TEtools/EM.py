@@ -3,13 +3,13 @@ import scipy.sparse as sparse
 
 
 class expectation_maximization(object):
-    def __init__(self, eff_lengths):
+    def __init__(self, blank):
         self.min_step = 1.0
         self.max_step = 1.0
         self.inc_step = 4.0
         self.tolerance = 0.0001
         self.max_iterations = 100
-        self.effective_lengths = eff_lengths
+        self.blank = blank
 
     def normalize(self, sparse_vect):
         tmp_sum = np.sum(sparse_vect.data)
@@ -27,10 +27,13 @@ class expectation_maximization(object):
             count_vect += tmp_cnt
         return count_vect
 
-    def calc_step_weights(self, counts):
-        weights = counts.multiply(self.effective_lengths)
-        weights = self.normalize(weights)
-        return weights
+    def compute_likeliest(selfself, weight_vect, umi_masks):
+        count_vect = sparse.lil_matrix(weight_vect.shape)
+        for mask in umi_masks:
+            tmp_cnt = mask.multiply(weight_vect)
+            likeliest = tmp_cnt.argmax()
+            count_vect[0,likeliest] += 1
+        return count_vect.tocsr()
 
     def calc_diff_magnitude(self, new_weights, old_weights):
         difference = new_weights - old_weights
@@ -57,24 +60,24 @@ class expectation_maximization(object):
 
         return sparse.csr_matrix(count_vect), umi_masks
 
-    def run(self, unmoored_counts, gene_counts):
+    def run(self, unmoored_counts):
         count_vect, umi_masks = self.preprocess(unmoored_counts,
-                                                np.zeros(max(self.effective_lengths.shape)))
-        initial_weights = self.calc_step_weights(count_vect+gene_counts)
+                                                np.zeros(max(self.blank.shape)))
+        initial_weights = self.normalize(count_vect)
 
         iteration_cntr = 0
 
         while iteration_cntr < self.max_iterations:
             iteration_cntr += 1
             initial_counts = self.compute_abundances(initial_weights, umi_masks)
-            first_step_weights = self.calc_step_weights(initial_counts+gene_counts)
+            first_step_weights = self.normalize(initial_counts)
 
             first_step_diff, first_step_magnitude = self.calc_diff_magnitude(first_step_weights, initial_weights)
             if first_step_magnitude < self.tolerance:
                 break
 
             first_step_counts = self.compute_abundances(first_step_weights, umi_masks)
-            second_step_weights = self.calc_step_weights(first_step_counts+gene_counts)
+            second_step_weights = self.normalize(first_step_counts)
 
             second_step_diff, second_step_magnitude = self.calc_diff_magnitude(second_step_weights, first_step_weights)
             if second_step_magnitude < self.tolerance:
@@ -96,7 +99,7 @@ class expectation_maximization(object):
             if abs(alphaS - 1.0) > 0.01:
                 try:
                     new_counts = self.compute_abundances(new_weights, umi_masks)
-                    new_weights = self.calc_step_weights(new_counts+gene_counts)
+                    new_weights = self.normalize(new_counts)
                 except:
                     print("Error in EMupdate")
                     raise
@@ -108,11 +111,11 @@ class expectation_maximization(object):
         if iteration_cntr > self.max_iterations:
             print("did not converge by " + str(self.max_iterations) + " iterations. \n")
 
-        return self.compute_abundances(initial_weights, umi_masks)
+        return self.compute_likeliest(initial_weights, umi_masks)
 
 
-def EM(unmo_vect, effective_lengths, gene_counts):
-    em_loops = expectation_maximization(effective_lengths)
-    unmo_cnt = em_loops.run(unmo_vect, gene_counts)
+def EM(unmo_vect, blank):
+    em_loops = expectation_maximization(blank)
+    unmo_cnt = em_loops.run(unmo_vect)
     return unmo_cnt
 
