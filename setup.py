@@ -19,9 +19,9 @@ setup(name='TEsingle',
           'Operating System :: Unix'
       ],
       keywords='TE transposable element differential enrichment single-cell',
-      url='http://hammelllab.labsites.cshl.edu/software',
+      url='https://www.mghlab.org/software/tesingle',
       author='Talitha Forcier, Cole Wunderlich, Oliver Tam, Molly Gale Hammell',
-      author_email='talitha.forcier@nyulangone.edu',
+      author_email='mghcompbio@gmail.com',
       license='GPLv3',
       packages=[
           'TEtools'

@@ -2,7 +2,7 @@ Name: TEsingle
 Version: 0.1
 Summary: Tool for assessing expression of Transposable Elements and other highly repetitive regions in single-cell data.
 Author: Talitha Forcier, Cole Wunderlich, Oliver Tam and Molly Gale Hammell
-Author-email: talitha.forcier@nyulangone.org
+Author-email: mghcompbio@gmail.com
 License: GPLv3
 Description: TEsingle
     =============
@@ -11,16 +11,16 @@ Description: TEsingle
 
     *NOTE* TEsingle relies on specially curated and indexed GTF files, which are not
     packaged with this software due to their size. Please go to
-    `our website <http://hammelllab.labsites.cshl.edu/software#TElocal>`_
+    `our website <https://www.mghlab.org/software/tesingle>`_
     for instructions to download the prebuilt curated indices.
 
     TEsingle takes single-cell RNA-seq data and annotates transcripts to both
     genes & transposable elements, producing a count table of all UMI counts for all cell barcodes.
 
 
-    `Github Page <https://github.com/mhammell-laboratory/PLACEHOLDER>`_
+    `Github Page <https://github.com/mhammell-laboratory/TEsingle>`_
 
-    `MHammell Lab <http://hammelllab.labsites.cshl.edu/software>`_
+    `MHammell Lab <http://www.mghlab.org/software>`_
 
     Created by Talitha Forcier, Cole Wunderlich, Oliver Tam & Molly Gale Hammell, March 2024
 
