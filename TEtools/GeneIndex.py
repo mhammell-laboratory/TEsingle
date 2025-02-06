@@ -11,7 +11,7 @@ class GFF_Reader():
         self.line_no = None
         self.filename = filename
         self.id_attribute = id_attribute
-        self._re_attr_main = re.compile("\s*([^\s\=]+)[\s=]+(.*)")
+        self._re_attr_main = re.compile(r"\s*([^\s\=]+)[\s=]+(.*)")
         # this is a regular expression for chopping the description pairs into key and value
 
     def __iter__(self):

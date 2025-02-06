@@ -8,7 +8,7 @@ Created on March 17, 2024
 @author: Oliver Tam
 @contact oliver.tam@nyulangone.org
 @status:
-@version: 0.1
+@version: 0.2
 """
 
 import sys

@@ -34,7 +34,7 @@ def rearranger(subg_list):
 
 
 def resolver(categories, both_list):
-    denom = categories[3]+categories[4]+categories[5]
+    denom = categories[3] + categories[5]
     if denom == 0:
         te_frac = 0
     else:
@@ -181,7 +181,7 @@ def count_reads(gene_blank, te_blank, cbc_dict, nodelist):
         return {'cnt': anch_cnts, 'cat': category}
 
 
-def count_umis(cell_dict, gene_blank, te_blank, effective_lengths):
+def count_umis(cell_dict, gene_blank, te_blank):
     bc_graph = cell_graph()
     bc_graph.build(cell_dict)
 
@@ -198,18 +198,18 @@ def count_umis(cell_dict, gene_blank, te_blank, effective_lengths):
 
     EM_vects = te_vects + anchboth_vects
 
-    tot_cnt = EM(EM_vects, effective_lengths, gene_cnts) + gene_cnts
+    tot_cnt = EM(EM_vects, sparse.hstack((gene_blank, te_blank))) + gene_cnts
     return tot_cnt, cat_sum
 
 
-def count_cells(full_dict, gene_blank, te_blank, effective_lengths, num_processes):
+def count_cells(full_dict, gene_blank, te_blank, num_processes):
     cbclist = list(full_dict.keys())
 
     mp.set_start_method('forkserver')
 
     pool = mp.Pool(num_processes)
 
-    tbl_list = [(cbc, pool.apply_async(count_umis, args=(full_dict[cbc], gene_blank, te_blank, effective_lengths))) for cbc in cbclist]
+    tbl_list = [(cbc, pool.apply_async(count_umis, args=(full_dict[cbc], gene_blank, te_blank))) for cbc in cbclist]
     del full_dict
     full_results = [(cbc, n.get()) for (cbc, n) in tbl_list]
 
