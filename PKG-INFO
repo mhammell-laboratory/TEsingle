@@ -1,5 +1,5 @@
 Name: TEsingle
-Version: 0.1
+Version: 0.2
 Summary: Tool for assessing expression of Transposable Elements and other highly repetitive regions in single-cell data.
 Author: Talitha Forcier, Cole Wunderlich, Oliver Tam and Molly Gale Hammell
 Author-email: mghcompbio@gmail.com
@@ -7,7 +7,7 @@ License: GPLv3
 Description: TEsingle
     =============
 
-    Version: 0.1
+    Version: 0.2
 
     *NOTE* TEsingle relies on specially curated and indexed GTF files, which are not
     packaged with this software due to their size. Please go to
