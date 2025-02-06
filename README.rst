@@ -95,18 +95,16 @@ Usage
       --project [name]      Prefix used for output files (e.g. project name)
                             DEFAULT: TEsingle_out
 
-      *Analysis options*
+      *Analysis/Running options*
       --cutoff [number]     Minimum number of uncorrected UMIs required to process a barcode
                             DEFAULT: 1000
       --nuc_seq             Flag to set if this is a nuc-seq experiment.
-      --locus               Flag for locus-specific run.
+      --threads [number]    Number of processors/threads allocated.
+                            DEFAULT:10
 
       *Other options*
-       --threads [number] Number of processors/threads allocated. DEFAULT:10
-      -h | --help
-         Show help message
-      --version
-         Show program's version and exit
+      -h | --help           Show help message
+      --version             Show program's version and exit
 
 
 Example Command Lines
