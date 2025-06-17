@@ -172,10 +172,10 @@ def main():
     sparse_tbl = sparse_tbl.transpose()
 
     with open("{}.annots".format(args.prefix), 'w') as fil_annot:
-        fil_annot.write('\n'.join(annots))
+        fil_annot.write('\n'.join(annots)+'\n')
 
     with open("{}.cbcs".format(args.prefix), 'w') as fil_cbcs:
-        fil_cbcs.write('\n'.join(cbcs))
+        fil_cbcs.write('\n'.join(cbcs)+'\n')
 
     sio.mmwrite("{}.mtx".format(args.prefix), sparse_tbl)
 
