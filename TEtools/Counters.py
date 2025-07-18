@@ -223,6 +223,8 @@ def count_cells(full_dict, gene_blank, te_blank, num_processes):
     full_sum = np.zeros(6)
     tblstack = False
 
+    full_results.sort(key=lambda x: x[0])
+
     for (cbc,placeholder) in full_results:
         cell_cnt = placeholder[0]
         cat_sum = placeholder[1]
