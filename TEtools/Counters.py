@@ -205,7 +205,7 @@ def count_umis(cell_dict, gene_blank, te_blank):
 def count_cells(full_dict, gene_blank, te_blank, num_processes):
     cbclist = list(full_dict.keys())
 
-    mp.set_start_method('forkserver')
+    mp.set_start_method('spawn')
 
     pool = mp.Pool(num_processes)
 
