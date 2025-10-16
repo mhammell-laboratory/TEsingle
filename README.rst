@@ -5,7 +5,7 @@ Version: 0.2
 
 *NOTE* TEsingle relies on specially curated GTF files, which are not
 packaged with this software due to their size. Please go to
-`our website <http://hammelllab.labsites.cshl.edu/software/tesingle>`_ 
+`our website <https://www.mghlab.org/software/tesingle>`_ 
 for instructions to download the curated annotation files, or 
 they can be found on `Dropbox <https://www.dropbox.com/home/TEToolkit_support_files/TEtranscripts/TE_GTF>`_.
 
