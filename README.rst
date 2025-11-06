@@ -5,8 +5,8 @@ Version: 0.2
 
 *NOTE* TEsingle relies on specially curated GTF files, which are not
 packaged with this software due to their size. Please go to
-`our website <https://www.mghlab.org/software/tesingle>`_ 
-for instructions to download the curated annotation files, or 
+`our website <https://www.mghlab.org/software/tesingle>`_
+for instructions to download the curated annotation files, or
 they can be found on `Dropbox <https://www.dropbox.com/scl/fo/jdpgn6fl8ngd3th3zebap/ACdZkShDC1au-OckIipI5kM/TEtranscripts/TE_GTF?rlkey=41oz6ppggy82uha5i3yo1rnlx&e=1&subfolder_nav_tracking=1&dl=0>`_.
 
 TEsingle takes single-cell RNA-seq data and annotates transcripts to both
