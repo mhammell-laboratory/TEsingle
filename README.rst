@@ -99,7 +99,6 @@ Usage
       *Analysis/Running options*
       --cutoff [number]     Minimum number of uncorrected UMIs required to process a barcode
                             DEFAULT: 1000
-      --nuc_seq             Flag to set if this is a nuc-seq experiment.
       --threads [number]    Number of processors/threads allocated.
                             DEFAULT:10
 
@@ -113,7 +112,7 @@ Example Command Lines
 
 ::
 
-    TEsingle  --threads 10 --stranded forward -b RNAseq.bam --nuc_seq --GTF refseq_genes.gtf --TE rmsk_TE.gtf --project sample_test
+    TEsingle  --threads 10 --stranded forward -b RNAseq.bam --GTF refseq_genes.gtf --TE rmsk_TE.gtf --project sample_test
 
 Cluster Usage Recommendations
 -----------------------------
