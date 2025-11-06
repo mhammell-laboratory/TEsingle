@@ -206,6 +206,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 A copy of BSD 3-clause licence is included along with the software, and can be accessed `here <https://github.com/mhammell-laboratory/TEsingle/blob/main/LICENSE>`_.
 
+
 Acknowledgment
 ==============
 
