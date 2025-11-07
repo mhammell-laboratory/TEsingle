@@ -7,6 +7,7 @@ def readme():
 setup(name='TEsingle',
       version='0.3',
       description='Tool for estimating differential enrichment of Transposable Elements and other highly repetitive regions in single-cell data',
+      long_description_content="text/x-rst",
       long_description=readme(),
       classifiers=[
           'Development Status :: 3 - Alpha',
