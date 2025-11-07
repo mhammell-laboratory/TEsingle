@@ -68,7 +68,7 @@ and ``python3.6`` if using python version 3.6.x)
 
 
 TEsingle
-=======
+========
 
 Usage
 -----
