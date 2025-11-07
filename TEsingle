@@ -91,8 +91,6 @@ def prepare_parser():
                         help='Number of processors/threads allocated. DEFAULT:10')
     parser.add_argument('--cutoff', metavar='minimum_UMI', dest='cutoff', type=int, default=1000,
                         help='Minimum number of uncorrected UMIs required to process a barcode. DEFAULT:1000')
-    parser.add_argument('--nuc_seq', dest='yes_ns', action="store_true", default=False,
-                        help='Flag to set if this is a nuc-seq experiment.')
     parser.add_argument('--version', action='version', version='%(prog)s 0.2')
 
     return parser
