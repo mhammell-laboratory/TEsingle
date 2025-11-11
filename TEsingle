@@ -104,25 +104,16 @@ def main():
     print("\n" + args.argtxt + "\n", flush=True)
 
     print("Processing GTF files ... \n", flush=True)
-    print("processing genes as full-length transcripts: "+str(args.yes_ns)+"\n", flush=True)
+    print("Processing genes as full-length transcripts. \n", flush=True)
     print("Running in locus-specific mode. \n", flush=True)
 
-    if not args.yes_ns:
-        try:
-            print("Building gene index ....... \n", flush=True)
-            geneIdx = GeneFeatures(args.gtffile, args.stranded, "exon", "gene_id")
-            print("Done building gene index ...... \n", flush=True)
-        except:
-            sys.stderr.write("Error in building gene index \n")
-            sys.exit(1)
-    else:
-        try:
-            print("Building gene index ....... \n", flush=True)
-            geneIdx = GeneFeatures(args.gtffile, args.stranded, "transcript", "gene_id")
-            print("Done building gene index ...... \n", flush=True)
-        except:
-            sys.stderr.write("Error in building gene index \n")
-            sys.exit(1)
+    try:
+        print("Building gene index ....... \n", flush=True)
+        geneIdx = GeneFeatures(args.gtffile, args.stranded, "transcript", "gene_id")
+        print("Done building gene index ...... \n", flush=True)
+    except:
+        sys.stderr.write("Error in building gene index \n")
+        sys.exit(1)
 
     if args.tefile[-4:] == '.gtf':
         try:
