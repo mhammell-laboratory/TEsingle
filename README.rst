@@ -212,4 +212,4 @@ Acknowledgment
 
 - Contributors: Talitha Forcier, Oliver Tam, Cole Wunderlich & Molly Gale Hammell
 
-This research was funded in whole by Aligning Science Across Parkinson’s (ASAP-000520) through the Michael J. Fox Foundation for Parkinson’s Research (MJFF).
+This research was funded in whole or in part by Aligning Science Across Parkinson’s (ASAP-000520) through the Michael J. Fox Foundation for Parkinson’s Research (MJFF).
