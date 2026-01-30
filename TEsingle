@@ -8,7 +8,7 @@ Created on March 17, 2024
 @author: Oliver Tam
 @contact oliver.tam@nyulangone.org
 @status:
-@version: 0.3
+@version: 1.0
 """
 
 import sys
@@ -91,7 +91,7 @@ def prepare_parser():
                         help='Number of processors/threads allocated. DEFAULT:10')
     parser.add_argument('--cutoff', metavar='minimum_UMI', dest='cutoff', type=int, default=1000,
                         help='Minimum number of uncorrected UMIs required to process a barcode. DEFAULT:1000')
-    parser.add_argument('--version', action='version', version='%(prog)s 0.3')
+    parser.add_argument('--version', action='version', version='%(prog)s 1.0')
 
     return parser
 

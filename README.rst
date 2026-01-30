@@ -1,7 +1,7 @@
 TEsingle
 =============
 
-Version: 0.3
+Version: 1.0
 
 *NOTE* TEsingle relies on specially curated GTF files, which are not
 packaged with this software due to their size. Please go to

@@ -5,7 +5,7 @@ def readme():
                return f.read()
 
 setup(name='TEsingle',
-      version='0.3',
+      version='1.0',
       description='Tool for estimating differential enrichment of Transposable Elements and other highly repetitive regions in single-cell data',
       long_description_content_type="text/x-rst",
       long_description=readme(),
