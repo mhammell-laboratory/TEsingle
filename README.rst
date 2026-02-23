@@ -212,4 +212,4 @@ Acknowledgment
 
 - Contributors: Talitha Forcier, Oliver Tam, Cole Wunderlich & Molly Gale Hammell
 
-This research was funded in part by Aligning Science Across Parkinson's (ASAP-000520) through the Michael J. Fox Foundation for Parkinson's Research (MJFF). Funding was also provided in part by the Chan-Zuckerberg Initiative (CZI) Neurodegeneration Challenge Network.
+This research was funded in part by Aligning Science Across Parkinson's (ASAP-000520, ASAP-024296 and ASAP-025170) through the Michael J. Fox Foundation for Parkinson's Research (MJFF). Funding was also provided in part by the Chan-Zuckerberg Initiative (CZI) Neurodegeneration Challenge Network.
