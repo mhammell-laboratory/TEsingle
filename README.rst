@@ -7,7 +7,7 @@ Version: 1.0
 packaged with this software due to their size. Please go to
 `our website <https://www.mghlab.org/software/tesingle>`_
 for instructions to download the curated annotation files, or
-they can be found on `Dropbox <https://www.dropbox.com/scl/fo/jdpgn6fl8ngd3th3zebap/ACdZkShDC1au-OckIipI5kM/TEtranscripts/TE_GTF?rlkey=41oz6ppggy82uha5i3yo1rnlx&e=1&subfolder_nav_tracking=1&dl=0>`_.
+they can be found on `Dropbox <https://www.dropbox.com/scl/fo/jdpgn6fl8ngd3th3zebap/ACdZkShDC1au-OckIipI5kM/TEtranscripts/TE_GTF?rlkey=41oz6ppggy82uha5i3yo1rnlx&e=1&subfolder_nav_tracking=1&dl=0>`_. A persistant link to the curated TE GTF for human (hg38 and GRCh38 GENCODE-compatible) and mouse (mm39 and GRCm39 GENCODE-compatible) can be found `here <https://zenodo.org/records/18927862>`_.
 
 TEsingle takes single-cell RNA-seq data and annotates transcripts to both
 genes & transposable elements, producing a count table of all UMI counts for all cell barcodes.
