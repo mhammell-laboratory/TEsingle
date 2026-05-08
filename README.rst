@@ -15,6 +15,8 @@ genes & transposable elements, producing a count table of all UMI counts for all
 
 `Github Page <https://github.com/mhammell-laboratory/TEsingle>`_
 
+`Pypi Page <https://pypi.org/project/TEsingle>`_
+
 `Molly Gale Hammell Lab <https://www.mghlab.org/software>`_
 
 Created by Talitha Forcier, Cole Wunderlich, Oliver Tam & Molly Gale Hammell, March 2024
