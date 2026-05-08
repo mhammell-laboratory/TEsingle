@@ -30,6 +30,8 @@ Python:     3.2.x or greater
 
 pysam:      0.9.x or greater
 
+setuptools
+
 networkx
 
 scipy
