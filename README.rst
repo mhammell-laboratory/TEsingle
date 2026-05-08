@@ -26,7 +26,7 @@ Copyright (C) 2024 Talitha Forcier, Cole Wunderlich, Oliver Tam & Molly Gale Ham
 Contact: mghcompbio@gmail.com
 
 Requirements
-------------
+============
 
 Python:     3.2.x or greater
 
@@ -42,10 +42,10 @@ numpy
 
 
 Installation
-------------
+============
 
 From PyPi
--------
+---------
 1. Run the following::
 
     $ pip install TEsingle
