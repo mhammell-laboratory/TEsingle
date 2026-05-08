@@ -44,6 +44,14 @@ numpy
 Installation
 ------------
 
+From PyPi
+-------
+1. Run the following::
+
+    $ pip install TEsingle
+
+From source
+-----------
 1. Download compressed tarball.
 2. Unpack tarball.
 3. Navigate into unpacked directory.
