@@ -1,3 +1,12 @@
+.. image:: https://img.shields.io/pypi/v/TEsingle?logo=python
+  :target: https://pypi.org/project/TEsingle/
+.. image:: https://img.shields.io/docker/v/mhammelllab/tesingle?logo=docker&label=docker%2Fsingularity
+  :target: https://hub.docker.com/r/mhammelllab/tetranscripts/tags
+.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.18435417.svg
+  :target: https://doi.org/10.5281/zenodo.18435417
+.. image:: https://img.shields.io/github/license/mhammell-laboratory/TEsingle
+   :alt: GitHub License
+
 TEsingle
 =============
 
@@ -14,8 +23,6 @@ genes & transposable elements, producing a count table of all UMI counts for all
 
 
 `Github Page <https://github.com/mhammell-laboratory/TEsingle>`_
-
-`Pypi Page <https://pypi.org/project/TEsingle>`_
 
 `Molly Gale Hammell Lab <https://www.mghlab.org/software>`_
 
