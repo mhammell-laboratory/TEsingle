@@ -27,6 +27,7 @@ import re
 import gzip
 import collections
 import gc
+import tempfile
 
 from TEtools.TEindex import *
 from TEtools.GeneIndex import *
@@ -118,12 +119,12 @@ def main():
     if args.tefile[-4:] == '.gtf':
         try:
             teIdx = TEfeatures()
-            cur_time = time.time()
-            te_tmpfile = '.' + str(cur_time) + '.te.gtf'
-            subprocess.call(['sort -k 1,1 -k 4,4g ' + args.tefile + ' >' + te_tmpfile], shell=True)
             print("Building TE index ....... \n", flush=True)
-            teIdx.build(te_tmpfile)
-            subprocess.call(['rm -f ' + te_tmpfile], shell=True)
+            with tempfile.TemporaryDirectory(prefix='tesingle-sort-') as tmpdir:
+                te_tmpfile = os.path.join(tmpdir, 'te.gtf')
+                with open(te_tmpfile, 'w') as destination:
+                    subprocess.run(['sort', '-k1,1', '-k4,4n', args.tefile], stdout=destination, check=True)
+                teIdx.build(te_tmpfile)
             print("Done building TE index ...... \n", flush=True)
 
         except:

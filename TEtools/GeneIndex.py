@@ -17,13 +17,13 @@ class GFF_Reader():
     def __iter__(self):
         self.line_no = 0
         if self.filename.lower().endswith((".gz", ".gzip")):
-            lines = gzip.open(self.filename)
+            lines = gzip.open(self.filename, 'rt')
         else:
             lines = open(self.filename)
 
         for line in lines:
             self.line_no += 1
-            if line == "\n" or line.startswith('#'):
+            if not line.strip() or line.startswith('#'):
                 continue
             (seqname, source, feature, start, end, score, strand, frame, attributeStr) = line.split("\t")
             id = self.__parse_GFF_attr_string(attributeStr, self.id_attribute)
@@ -35,12 +35,14 @@ class GFF_Reader():
 
     def __parse_GFF_attr_string(self, attributeStr, id_interested):
         for pairs in attributeStr.split(';'):
+            if not pairs.strip():
+                continue
             if pairs.count('"') not in [0, 2]:
                 raise ValueError("The attribute string seems to contain mismatched quotes.")
             nv = self._re_attr_main.match(pairs)  # YYY we could parse these differently and remove re dependence
             if not nv:
                 raise ValueError("Failure parsing GFF attribute line.")
-            val = nv.group(2)
+            val = nv.group(2).strip().strip('"')
             name = nv.group(1)
             if name == id_interested:
                 return val
@@ -159,6 +161,7 @@ class GeneFeatures:
         gff = GFF_Reader(gff_filename, id_attribute)
         i = 0
         counts = 0
+        seen_features = set()
         try:
             for f in gff:
                 if f[0] is None:
@@ -186,8 +189,9 @@ class GeneFeatures:
                         temp_minus[f[1]][f[0]] = [(f[3], f[4])]
 
                     # save gene id
-                    if f[0] not in self.features:
+                    if f[0] not in seen_features:
                         self.features.append(f[0])
+                        seen_features.add(f[0])
                     if f[0] not in self.lengthDict:
                         self.lengthDict[f[0]] = 0
                     self.lengthDict[f[0]] += f[4] - f[3]

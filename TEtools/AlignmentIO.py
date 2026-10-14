@@ -78,4 +78,7 @@ def read_in_alignment(filename, geneIdx, teIdx, stranded):
     except StopIteration:
         pass
 
+    finally:
+        samfile.close()
+
     return transc_dict
