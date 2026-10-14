@@ -27,6 +27,8 @@ import re
 import gzip
 import collections
 import gc
+import tempfile
+import json
 
 from TEtools.TEindex import *
 from TEtools.GeneIndex import *
@@ -39,6 +41,10 @@ sys.setrecursionlimit(10000)
 
 def read_options(parser):
     args = parser.parse_args()
+    if args.numproc < 1 or args.cutoff < 0:
+        parser.error('--threads must be positive and --cutoff must be nonnegative')
+    if args.cell_barcodes and not os.path.isfile(args.cell_barcodes):
+        parser.error('No such cell barcode file: ' + args.cell_barcodes)
 
     if not os.path.isfile(args.tefile):
         sys.stderr.write("No such file: %s !\n" % args.tefile)
@@ -91,6 +97,9 @@ def prepare_parser():
                         help='Number of processors/threads allocated. DEFAULT:10')
     parser.add_argument('--cutoff', metavar='minimum_UMI', dest='cutoff', type=int, default=1000,
                         help='Minimum number of uncorrected UMIs required to process a barcode. DEFAULT:1000')
+    parser.add_argument('--cell-barcodes', help='Called-cell barcode list (plain text or gzip, optional 10x suffix).')
+    parser.add_argument('--allow-truncated-bam', action='store_true',
+                        help='Allow a known truncated STAR BAM for diagnostic comparisons only.')
     parser.add_argument('--version', action='version', version='%(prog)s 1.0')
 
     return parser
@@ -100,6 +109,14 @@ def main():
     """Start TEsingle......parse options......"""
 
     args = read_options(prepare_parser())
+    try:
+        validate_alignment(args.bam, args.allow_truncated_bam)
+        called_cells = read_cell_barcodes(args.cell_barcodes) if args.cell_barcodes else None
+    except (ValueError, OSError) as error:
+        sys.stderr.write(str(error) + '\n')
+        sys.exit(1)
+    if called_cells is not None:
+        print('Using %s called-cell barcodes; raw UMI cutoff = %s.' % (len(called_cells), args.cutoff), flush=True)
 
     print("\n" + args.argtxt + "\n", flush=True)
 
@@ -118,12 +135,12 @@ def main():
     if args.tefile[-4:] == '.gtf':
         try:
             teIdx = TEfeatures()
-            cur_time = time.time()
-            te_tmpfile = '.' + str(cur_time) + '.te.gtf'
-            subprocess.call(['sort -k 1,1 -k 4,4g ' + args.tefile + ' >' + te_tmpfile], shell=True)
             print("Building TE index ....... \n", flush=True)
-            teIdx.build(te_tmpfile)
-            subprocess.call(['rm -f ' + te_tmpfile], shell=True)
+            with tempfile.TemporaryDirectory(prefix='tesingle-sort-') as tmpdir:
+                te_tmpfile = os.path.join(tmpdir, 'te.gtf')
+                with open(te_tmpfile, 'w') as destination:
+                    subprocess.run(['sort', '-k1,1', '-k4,4n', args.tefile], stdout=destination, check=True)
+                teIdx.build(te_tmpfile)
             print("Done building TE index ...... \n", flush=True)
 
         except:
@@ -135,13 +152,17 @@ def main():
         sys.exit(1)
 
     print('read_in_alignment starting at:  ', time.ctime(), flush=True)
-    full_dict = read_in_alignment(args.bam, geneIdx, teIdx, args.stranded)
+    full_dict = read_in_alignment(args.bam, geneIdx, teIdx, args.stranded, called_cells)
+    if called_cells is not None and args.cutoff == 0:
+        for barcode in called_cells:
+            full_dict.setdefault(barcode, {})
     print('read_in_alignment finishing at:  ', time.ctime(), flush=True)
     full_dict, init_cbc, post_cbc = basic_filtering(full_dict, args.cutoff)
     if post_cbc == 0:
         print('zero cell barcodes passed the minimum threshold.')
         sys.exit(1)
     print('initially {} cell barcodes detected, with {} passing the minimum threshold'.format(init_cbc, post_cbc), flush=True)
+    retained_raw_umis = sum(len(cell) for cell in full_dict.values())
 
     annots = geneIdx.getFeatures() + teIdx.getElements()
     gencnt = len(geneIdx.getFeatures())
@@ -155,6 +176,8 @@ def main():
 
     print('count_cells starting at:  ', time.ctime(), flush=True)
     sparse_tbl, cbcs, collapsed_summary = count_cells(full_dict, gene_blank, te_blank, args.numproc)
+    unrounded_gene_sum = float(sparse_tbl[:, :gencnt].sum())
+    unrounded_te_sum = float(sparse_tbl[:, gencnt:].sum())
     sparse_tbl.data = np.rint(sparse_tbl.data)
     sparse_tbl = sparse_tbl.astype(int)
     sparse_tbl.eliminate_zeros()
@@ -167,6 +190,17 @@ def main():
         fil_cbcs.write('\n'.join(cbcs)+'\n')
 
     sio.mmwrite("{}.mtx".format(args.prefix), sparse_tbl)
+    summary = {
+        'cells': len(cbcs), 'retained_raw_UMIs': retained_raw_umis,
+        'gene_UMI_before_rounding': unrounded_gene_sum, 'TE_UMI_before_rounding': unrounded_te_sum,
+        'gene_UMI': int(sparse_tbl[:gencnt, :].sum()), 'TE_UMI': int(sparse_tbl[gencnt:, :].sum()),
+        'UMI_categories': dict(zip(UMI_CATEGORIES, collapsed_summary.tolist())),
+        'called_cell_list': args.cell_barcodes, 'raw_UMI_cutoff': args.cutoff,
+        'diagnostic_truncated_BAM_override': args.allow_truncated_bam,
+    }
+    with open('{}.summary.json'.format(args.prefix), 'w') as stream:
+        json.dump(summary, stream, indent=2)
+        stream.write('\n')
 
     print('run complete\n', flush=True)
 

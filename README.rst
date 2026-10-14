@@ -120,8 +120,16 @@ Usage
                             DEFAULT: 1000
       --threads [number]    Number of processors/threads allocated.
                             DEFAULT:10
+      --cell-barcodes [file]
+                            Called-cell barcode list (plain text or gzip). The first column
+                            of each line is used and a 10x "-1" suffix is ignored. Only these
+                            barcodes are counted; with --cutoff 0, every listed barcode is
+                            reported, including barcodes without counts.
+                            DEFAULT: not set (barcodes are selected by --cutoff)
 
       *Other options*
+      --allow-truncated-bam Allow a STAR BAM written with --outSAMmultNmax smaller than
+                            --outFilterMultimapNmax (for diagnostic comparisons only)
       -h | --help           Show help message
       --version             Show program's version and exit
 
@@ -132,6 +140,14 @@ Example Command Lines
 ::
 
     TEsingle  --threads 10 --stranded forward -b RNAseq.bam --GTF refseq_genes.gtf --TE rmsk_TE.gtf --project sample_test
+
+Output files
+------------
+
+``[project].mtx``, ``[project].annots`` and ``[project].cbcs`` hold the feature x cell count matrix
+(Matrix Market format), its feature names and its cell barcodes. ``[project].summary.json`` records
+the number of cells, gene and TE totals before and after rounding, the UMI category tally and the
+cell selection settings of the run.
 
 Cluster Usage Recommendations
 -----------------------------
@@ -166,6 +182,11 @@ as this could significantly improve the quality of transposable element quantifi
 should be set at twice the value used in ``--outFilterMultimapNmax``, but no less than 50. In our study, we used
 100 for ``--outFilterMultimapNmax`` and 200 for ``--winAnchorMultimapNmax``, though we highly suggest users test
 multiple values to identify the optimal value for their experiment.
+
+Keep ``--outSAMmultNmax`` at its default (-1) so that every alignment of a multi-mapper is written
+to the BAM. TEsingle recognises multi-mappers by their number of alignments in the BAM, so a value
+of 1 makes them look uniquely mapped. TEsingle stops with an error when the STAR command line in the
+BAM header shows ``--outSAMmultNmax`` smaller than ``--outFilterMultimapNmax``.
 
 STAR  settings used::
 

@@ -1,4 +1,5 @@
 import sys
+import re
 
 
 TEindex_BINSIZE = 500
@@ -287,7 +288,7 @@ class TEfeatures(object):
         for line in f:
             line = line.strip()
 
-            if line.startswith("#"):
+            if not line or line.startswith("#"):
                 continue
 
             items = line.split('\t')
@@ -296,35 +297,18 @@ class TEfeatures(object):
             end = int(items[4])
             strand = items[6]
 
-            items[8] = items[8].replace("; ", ";")
-            desc = items[8].split(';')
-            transc_id = ""
-            family_id = ""
-            ele_id = ""
-            class_id = ""
-
             tlen = end - start + 1
             linenum += 1
-
-            for i in range(len(desc)):
-                desc[i] = desc[i].replace("\"", "")
-                pos = desc[i].find(" ")
-                tid = desc[i][:pos]
-                val = desc[i][pos + 1:len(desc[i])]
-
-                if tid == "gene_id":
-                    ele_id = val
-                if tid == "transcript_id":
-                    transc_id = val
-                if tid == "family_id":
-                    family_id = val
-                if tid == "class_id":
-                    class_id = val
+            attributes = dict(re.findall(r'(\w+)\s+"([^"]*)"', items[8]))
+            ele_id = attributes.get('gene_id', '')
+            transc_id = attributes.get('transcript_id', '')
+            family_id = attributes.get('family_id', '')
+            class_id = attributes.get('class_id', '')
 
             if ele_id == "" or transc_id == "" or family_id == "" or class_id == "":
                 sys.stderr.write(line + "\n")
                 sys.stderr.write("TE GTF format error! There is missing annotation at line %s.\n" % linenum)
-                raise
+                raise ValueError('Missing required TE GTF attributes at record %s' % linenum)
 
             full_name = transc_id + ':' + ele_id + ':' + family_id + ':' + class_id + ':' + strand
             subf_name = transc_id + ':' + ele_id + ':' + family_id + ':' + class_id
